@@ -16,6 +16,7 @@ object TwoPoint {
 
 class TwoPoint(numbers: Array[Int]) {
 
+    // 命令型版
     def instructionalCountSumUnder(_threshold: Int): Int = {
       var _end = 0
       var _sum = 0

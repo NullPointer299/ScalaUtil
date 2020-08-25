@@ -12,7 +12,7 @@ object Rational {
 }
 
 // TODO 分子が負の値になった時の表示を直す
-class Rational(_numerator: Int, _denominator: Int) {
+class Rational(_numerator: Int, _denominator: Int) extends Ordered[Rational] {
 
   require(_denominator != 0, "`_denominator` must be non-zero.")
 
@@ -27,12 +27,13 @@ class Rational(_numerator: Int, _denominator: Int) {
   def this(_numerator: Int) = this(_numerator, 1)
 
   def +(numeric: Int): Rational = {
-    Rational(numerator + numeric * denominator, denominator)
+    Rational(numerator + (numeric * denominator), denominator)
   }
 
   def +(that: Rational): Rational = {
-    Rational(numerator * that.denominator + that.numerator * denominator,
-      denominator * that.denominator)
+    Rational(
+      (this.numerator * that.denominator) + (that.numerator * this.denominator),
+      this.denominator * that.denominator)
   }
 
   def -(numeric: Int): Rational = {
@@ -40,8 +41,9 @@ class Rational(_numerator: Int, _denominator: Int) {
   }
 
   def -(that: Rational): Rational = {
-    Rational(numerator * that.denominator - that.numerator * denominator,
-      denominator * that.denominator)
+    Rational(
+      (this.numerator * that.denominator) - (that.numerator * this.denominator),
+      this.denominator * that.denominator)
   }
 
   def *(numeric: Int): Rational = {
@@ -49,7 +51,7 @@ class Rational(_numerator: Int, _denominator: Int) {
   }
 
   def *(that: Rational): Rational = {
-    Rational(numerator * that.numerator, denominator * that.denominator)
+    Rational(this.numerator * that.numerator, this.denominator * that.denominator)
   }
 
   def /(numeric: Int): Rational = {
@@ -57,11 +59,22 @@ class Rational(_numerator: Int, _denominator: Int) {
   }
 
   def /(that: Rational): Rational = {
-    Rational(numerator * that.denominator, denominator * that.numerator)
+    Rational(this.numerator * that.denominator, this.denominator * that.numerator)
   }
 
   def calcGcd(num1: Int, num2: Int): Int = {
     if (num2 == 0) num1 else calcGcd(num2, num1 % num2)
+  }
+
+  override def compare(that: Rational): Int = {
+    (this.numerator * that.denominator) - (that.numerator * this.denominator)
+  }
+
+  // TODO 適切に比較する
+  override def equals(that: Any): Boolean = {
+    if (that == null) false
+    else if (!that.isInstanceOf[Rational]) false
+    else true
   }
 
   override def toString: String = {
